@@ -103,6 +103,12 @@ flowchart TD
 4. **Access the Application Interface:**
     Navigate to `http://localhost:8000` in your web browser. 
 
+### Optional: Running the "Chief Arbiter" Critic Server
+The repository includes `critic_server.py`, an external standalone Flask API designed to consult cloud models (Mistral & Gemini) and synthesize their findings using a local "Chief Arbiter" model (e.g., Qwen 3.5 9B). 
+* **Dual PC Distributed Setup (Fun Experiment):** You can run `critic_server.py` on a second independent PC! This allows PC #2 to run the smaller Qwen 3.5 9B model in its own LM Studio instance, freeing up PC #1 to purely power the heavy 26B model. To do this, simply point the API payloads across your local network.
+* **Single PC Setup:** The entire council and critic logic can absolutely be run on the same PC utilizing the same 26B model you're already running. The secondary PC setup was created explicitly as a fun test of multi-machine orchestrations. 
+*(Note: If you activate this server, remember to insert your own `MISTRAL_API_KEY` and `GEMINI_API_KEY` securely inside the file!)*
+
 Use the tabs at the top of the interface to switch contexts between the general **Essay Helper** ecosystem, the specialized **College Essay** pipeline, or the standalone **Humanizer**.
 
 *For developers pushing changes to deployment environments, ensure your `.env`, SQLite Vector DB (`essay_db`), and generated `.pyc` caches are safely ignored via `.gitignore`.*
