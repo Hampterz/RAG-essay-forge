@@ -28,34 +28,34 @@ For high-stakes college admissions, the Forge utilizes a deep, five-stage RAG-au
 flowchart TD
     Start([Student pastes essay]) --> A1
 
-    A1[<b>Agent 1 — The Distiller</b><br/>Embeds essay, queries ChromaDB for top 5 benchmarks, writes gap report]
-    db1[(<b>ChromaDB</b><br/>~200 benchmark essays)]
+    A1["<b>Agent 1 — The Distiller</b><br/>Embeds essay, queries ChromaDB for top 5 benchmarks, writes gap report"]
+    db1[("<b>ChromaDB</b><br/>~200 benchmark essays")]
     db1 -. RAG query .-> A1
     
-    A1 -- hidden report --> A2[<b>Agent 2 — The Counselor</b><br/>Reads report secretly, grades essay A-F, gives mentor feedback]
+    A1 -- hidden report --> A2["<b>Agent 2 — The Counselor</b><br/>Reads report secretly, grades essay A-F, gives mentor feedback"]
     
-    A2 -- grade + feedback --> A3[<b>Agent 3 — The Rewriter</b><br/>Uses report + feedback, rewrites full essay as sharp 17-year-old]
+    A2 -- grade + feedback --> A3["<b>Agent 3 — The Rewriter</b><br/>Uses report + feedback, rewrites full essay as sharp 17-year-old"]
     
-    subgraph Council [Consult the Council (optional)]
-        subgraph Cloud [ ]
-            C1[<b>GPT-5.4 mini</b><br/>Harvard admissions lens<br/>flags AI gloss + voice breaks]
-            C2[<b>Gemini 3 Flash</b><br/>Journalist writing lens<br/>flags performed authenticity]
+    subgraph Council ["Consult the Council (optional)"]
+        subgraph Cloud
+            C1["<b>GPT-5.4 mini</b><br/>Harvard admissions lens<br/>flags AI gloss + voice breaks"]
+            C2["<b>Gemini 3 Flash</b><br/>Journalist writing lens<br/>flags performed authenticity"]
         end
-        CArb[<b>Qwen 3.5 — Chief Arbiter</b><br/>Reads both critiques, synthesizes<br/>final PASS / FAIL verdict + red flags]
+        CArb["<b>Qwen 3.5 — Chief Arbiter</b><br/>Reads both critiques, synthesizes<br/>final PASS / FAIL verdict + red flags"]
         C1 --> CArb
         C2 --> CArb
     end
     
     A3 -- rewritten draft --> Council
     
-    Council -- red flag JSON --> A4[<b>Agent 4 — The Surgeon</b><br/>Fixes only flagged phrases, keeps 95%+ intact<br/>preserves all vivid specific details]
+    Council -- red flag JSON --> A4["<b>Agent 4 — The Surgeon</b><br/>Fixes only flagged phrases, keeps 95%+ intact<br/>preserves all vivid specific details"]
     
-    A4 -- council-approved draft --> A5[<b>Agent 5 — The Humanizer</b><br/>Sentence-level RAG vs 546k real sentences<br/>calibrates rhythm + texture to human patterns]
+    A4 -- council-approved draft --> A5["<b>Agent 5 — The Humanizer</b><br/>Sentence-level RAG vs 546k real sentences<br/>calibrates rhythm + texture to human patterns"]
     
-    db2[(<b>human_patterns</b><br/>546k real sentences)]
+    db2[("<b>human_patterns</b><br/>546k real sentences")]
     db2 -. RAG query .-> A5
     
-    A5 --> End[(Final humanized essay)]
+    A5 --> End[("Final humanized essay")]
 
     classDef analysis fill:#312e81,stroke:#4f46e5,color:#fff;
     classDef writing fill:#78350f,stroke:#d97706,color:#fff;

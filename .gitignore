@@ -5,3 +5,8 @@ essay_db/
 github_deploy_key
 github_deploy_key.pub
 .env
+
+# Raw scraper scripts and raw txt data
+scrape_*.py
+convert_*.py
+collegebase_essays.txt
