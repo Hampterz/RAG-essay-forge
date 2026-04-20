@@ -105,3 +105,16 @@ flowchart TD
 Use the tabs at the top of the interface to switch contexts between the general **Essay Helper** ecosystem, the specialized **College Essay** pipeline, or the standalone **Humanizer**.
 
 *For developers pushing changes to deployment environments, ensure your `.env`, SQLite Vector DB (`essay_db`), and generated `.pyc` caches are safely ignored via `.gitignore`.*
+
+---
+
+## 📚 Credits & Data Sources
+To accurately simulate the Distiller benchmark dataset and the Humanizer's organic rhythms, publicly available accepted essays and student writing samples were utilized as training constraints. Deepest thanks and credit to the following valuable resources:
+* **"Essays That Worked" Galleries** — Various university admissions blogs showcasing real accepted college admissions essays.
+* **OpenEssays** — An incredible open-source corpus of genuine student written material.
+* **CollegeBase** — Curated educational datasets of essay benchmarks.
+
+---
+
+> [!WARNING]
+> **DISCLAIMER:** This application was built entirely as a fun, experimental side-project to explore and test Multi-Agent AI architecture and RAG logic. **It is NOT intended for actual use in real college admissions, nor should it be used for cheating, generating homework, or any actual academic submissions.** Please write your own authentic essays. The developer assumes no responsibility for any consequences arising from the use of this pipeline in real-world academic environments.
