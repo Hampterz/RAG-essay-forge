@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>The Council - Academic War Room</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#1b1b20",
+              "secondary-fixed-dim": "#c6c6cb",
+              "on-error": "#690005",
+              "tertiary-fixed": "#dbe1ff",
+              "surface-container": "#1f1f25",
+              "tertiary-container": "#97b0ff",
+              "primary-fixed": "#ffe088",
+              "on-surface": "#e4e1e9",
+              "surface-container-highest": "#35343a",
+              "tertiary": "#bfcdff",
+              "primary-container": "#d4af37",
+              "on-primary-container": "#554300",
+              "on-tertiary-fixed": "#00174b",
+              "on-tertiary": "#082b72",
+              "inverse-on-surface": "#303036",
+              "on-tertiary-fixed-variant": "#27438a",
+              "surface-dim": "#131318",
+              "secondary-container": "#46464b",
+              "on-tertiary-container": "#254188",
+              "on-surface-variant": "#d0c5af",
+              "outline": "#99907c",
+              "background": "#131318",
+              "tertiary-fixed-dim": "#b4c5ff",
+              "outline-variant": "#4d4635",
+              "surface-container-high": "#2a292f",
+              "on-primary": "#3c2f00",
+              "on-secondary-container": "#b5b4ba",
+              "on-primary-fixed": "#241a00",
+              "error-container": "#93000a",
+              "on-error-container": "#ffdad6",
+              "error": "#ffb4ab",
+              "inverse-surface": "#e4e1e9",
+              "primary": "#f2ca50",
+              "inverse-primary": "#735c00",
+              "secondary": "#c6c6cb",
+              "on-secondary": "#2f3034",
+              "surface-variant": "#35343a",
+              "on-secondary-fixed": "#1a1b1f",
+              "primary-fixed-dim": "#e9c349",
+              "on-background": "#e4e1e9",
+              "surface-bright": "#39383e",
+              "surface-container-lowest": "#0e0e13",
+              "on-primary-fixed-variant": "#574500",
+              "surface-tint": "#e9c349",
+              "secondary-fixed": "#e3e2e7",
+              "on-secondary-fixed-variant": "#46464b",
+              "surface": "#131318"
+            },
+            borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" },
+            fontFamily: { headline: ["Noto Serif"], body: ["Noto Serif"], label: ["Inter"] }
+          },
+        },
+      }
+    </script>
+    <style>
+        body { background-color: #131318; color: #e4e1e9; }
+        .glow-active { box-shadow: 0 0 12px #f2ca50; }
+        .glow-error { box-shadow: 0 0 12px #ffb4ab; }
+        .ambient-shadow { box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .hidden { display: none !important; }
+
+        /* Markdown content styling */
+        .msg-content p { margin-bottom: 16px; }
+        .msg-content p:last-child { margin-bottom: 0; }
+        .msg-content strong { color: #fff; font-weight: 600; }
+        .msg-content ul, .msg-content ol { margin-left: 20px; margin-bottom: 16px; }
+        .msg-content li { margin-bottom: 6px; }
+        .msg-content blockquote { border-left: 3px solid #4d4635; padding-left: 14px; color: #d0c5af; margin-bottom: 16px; }
+        .msg-content h1, .msg-content h2, .msg-content h3 { color: #e4e1e9; margin-top: 20px; margin-bottom: 10px; font-weight: 700; }
+
+        /* Council details styling */
+        .council-flag summary { cursor: pointer; list-style: none; }
+        .council-flag summary::-webkit-details-marker { display: none; }
+        .council-flag summary::before { content: '\u25b6 '; font-size: 11px; display: inline-block; transition: transform 0.2s; }
+        .council-flag[open] summary::before { transform: rotate(90deg); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: #35343a; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden font-body">
+
+    <!-- Sidebar -->
+    <nav class="fixed left-0 top-0 h-full z-40 flex flex-col p-6 w-72 border-r border-transparent bg-[#1b1b20] shadow-[10px_0_30px_rgba(0,0,0,0.5)]">
+        <div class="mb-10">
+            <h2 class="text-lg font-serif italic text-[#d4af37] mb-1">The Archives</h2>
+            <p class="font-sans text-[12px] uppercase tracking-[0.05em] text-[#f2ca50]/60">Oxford Edition</p>
+        </div>
+        <button id="new-session-btn" class="mb-8 w-full py-3 bg-[#f2ca50] text-[#3c2f00] font-sans text-sm uppercase tracking-wider rounded font-bold shadow-lg shadow-black/20 hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">add</span>
+            New Essay
+        </button>
+        <ul class="flex-1 flex flex-col gap-2">
+            <li>
+                <a id="current-session-btn" class="flex items-center gap-4 px-4 py-3 bg-[#2a292f] text-[#f2ca50] font-bold rounded-sm border-l-2 border-[#d4af37] translate-x-1 transition-transform" href="#">
+                    <span class="material-symbols-outlined">chat</span>
+                    <span class="font-sans text-[12px] uppercase tracking-[0.05em]">Current Session</span>
+                </a>
+            </li>
+            <li>
+                <a class="flex items-center gap-4 px-4 py-3 text-[#f2ca50]/40 hover:bg-[#2a292f]/50 hover:text-[#f2ca50] transition-all rounded-sm duration-200" href="#">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="font-sans text-[12px] uppercase tracking-[0.05em]">Draft History</span>
+                </a>
+            </li>
+            <li>
+                <a class="flex items-center gap-4 px-4 py-3 text-[#f2ca50]/40 hover:bg-[#2a292f]/50 hover:text-[#f2ca50] transition-all rounded-sm duration-200" href="#">
+                    <span class="material-symbols-outlined">menu_book</span>
+                    <span class="font-sans text-[12px] uppercase tracking-[0.05em]">Academic Resources</span>
+                </a>
+            </li>
+        </ul>
+        <div class="mt-auto flex items-center gap-3 border-t border-[#4d4635]/20 pt-4">
+            <div class="w-8 h-8 rounded-full bg-[#2a292f] flex items-center justify-center text-[#d4af37]">
+                <span class="material-symbols-outlined text-sm">school</span>
+            </div>
+            <span class="font-sans text-[12px] uppercase tracking-[0.05em] text-[#d0c5af]">The Dean</span>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col ml-72 relative">
+
+        <!-- Top Bar -->
+        <header class="sticky top-0 z-30 flex justify-between items-center w-full px-8 py-4 bg-[#131318]/80 backdrop-blur-xl border-b border-[#4d4635]/20 shadow-2xl shadow-black/40">
+            <h1 class="text-xl font-serif font-bold text-[#d4af37] tracking-widest uppercase">THE COUNCIL</h1>
+            <nav class="flex flex-wrap gap-4 md:gap-8">
+                <a id="tab-council" class="text-[#f2ca50] font-bold border-b-2 border-[#f2ca50] pb-1 font-serif tracking-tight opacity-80 cursor-pointer">College Essay</a>
+                <a id="tab-humanizer" class="text-[#f2ca50]/60 font-medium font-serif tracking-tight hover:text-[#f2ca50] transition-all duration-300 cursor-pointer">The Humanizer</a>
+                <a id="tab-essayhelper" class="text-[#f2ca50]/60 font-medium font-serif tracking-tight hover:text-[#f2ca50] transition-all duration-300 cursor-pointer">Essay Helper</a>
+                <a id="show-agent1-btn" class="hidden text-[#f2ca50]/60 font-medium font-serif tracking-tight hover:text-[#f2ca50] transition-all duration-300 cursor-pointer">Distiller Report</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <span id="token-counter" class="font-mono text-[10px] text-[#d0c5af]/50 uppercase tracking-wider">0/8192</span>
+                <button class="text-[#f2ca50]/60 hover:text-[#f2ca50] transition-colors">
+                    <span class="material-symbols-outlined text-2xl">account_circle</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Chat Canvas (scrollable area) -->
+        <div id="content-container" class="flex-1 overflow-y-auto pb-48 pt-8">
+
+            <!-- THE COUNCIL SECTION -->
+            <div id="council-section" class="w-full">
+                <!-- Setup Screen -->
+                <div id="setup-screen" class="max-w-[900px] mx-auto w-full px-6 flex flex-col items-center justify-center min-h-[60vh]">
+                    <div class="text-center mb-10">
+                        <h1 class="text-3xl font-serif font-bold text-[#d4af37] mb-3">Submit Your Draft</h1>
+                        <p class="text-[#d0c5af]/70 font-body text-base max-w-lg mx-auto">Paste your college essay below. The Council will convene — Agent 1 distills benchmark intelligence, Agent 2 delivers mentorship, and the full pipeline awaits your command.</p>
+                    </div>
+                    <div class="w-full max-w-[800px]">
+                        <textarea id="essay-input" class="w-full bg-[#0e0e13] border border-[#4d4635]/30 rounded-lg p-6 text-[#e4e1e9] font-body text-base leading-relaxed resize-none focus:outline-none focus:border-[#f2ca50]/40 focus:shadow-[0_0_20px_rgba(242,202,80,0.05)] transition-all min-h-[250px]" placeholder="Paste your essay here..."></textarea>
+                        <div class="flex justify-end items-center mt-4">
+                            <button id="start-btn" class="bg-[#f2ca50] text-[#3c2f00] px-8 py-3 rounded font-sans font-bold text-sm uppercase tracking-wider flex items-center gap-2 hover:bg-[#e9c349] transition-colors shadow-lg shadow-[#f2ca50]/10 disabled:opacity-40 disabled:cursor-not-allowed">
+                                <span>Initialize RAG</span>
+                                <span class="material-symbols-outlined text-sm">send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat History (hidden initially) -->
+                <div id="chat-history" class="hidden max-w-[900px] mx-auto w-full px-6 flex flex-col gap-12">
+                </div>
+            </div>
+
+            <!-- THE HUMANIZER SECTION -->
+            <div id="humanizer-section" class="hidden w-full">
+                <!-- Humanizer Setup Screen -->
+                <div id="humanizer-setup" class="max-w-[900px] mx-auto w-full px-6 flex flex-col items-center justify-center min-h-[60vh]">
+                    <div class="text-center mb-10">
+                        <h1 class="text-3xl font-serif font-bold text-[#a78bfa] mb-3">The Humanizer (Agent 5)</h1>
+                        <p class="text-[#d0c5af]/70 font-body text-base max-w-lg mx-auto">Paste any essay here to scrub AI-speak and infuse it with real human sentence DNA. Only Agent 5 operates in this sector.</p>
+                    </div>
+                    <div class="w-full max-w-[800px]">
+                        <textarea id="humanizer-input" class="w-full bg-[#0e0e13] border border-[#a78bfa]/30 rounded-lg p-6 text-[#e4e1e9] font-body text-base leading-relaxed resize-none focus:outline-none focus:border-[#a78bfa]/60 focus:shadow-[0_0_20px_rgba(167,139,250,0.08)] transition-all min-h-[250px]" placeholder="Paste the essay to humanize here..."></textarea>
+                        <div class="flex justify-end items-center mt-4">
+                            <button id="start-humanizer-btn" class="bg-[#131318] text-[#a78bfa] border border-[#a78bfa]/40 px-8 py-3 rounded font-sans font-bold text-sm uppercase tracking-wider flex items-center gap-2 hover:border-[#a78bfa] hover:bg-[#a78bfa]/10 transition-all shadow-lg shadow-[#a78bfa]/10 disabled:opacity-40 disabled:cursor-not-allowed">
+                                <span>Run Humanizer</span>
+                                <span class="material-symbols-outlined text-sm">genetics</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Humanizer Chat History (hidden initially) -->
+                <div id="humanizer-chat-history" class="hidden max-w-[900px] mx-auto w-full px-6 flex flex-col gap-12">
+                </div>
+            </div>
+
+            <!-- THE ESSAY HELPER SECTION -->
+            <div id="essayhelper-section" class="hidden w-full">
+                <!-- Essay Helper Setup Screen -->
+                <div id="essayhelper-setup" class="max-w-[900px] mx-auto w-full px-6 flex flex-col items-center justify-center min-h-[60vh]">
+                    <div class="text-center mb-10">
+                        <h1 class="text-3xl font-serif font-bold text-[#4ade80] mb-3">Essay Helper</h1>
+                        <p class="text-[#d0c5af]/70 font-body text-base max-w-lg mx-auto">Submit any academic essay for analysis, rewrite, and coaching. Three agents work in sequence: The Examiner grades, The Rewriter fixes, and The Coach guides.</p>
+                    </div>
+                    <div class="w-full max-w-[800px] space-y-4">
+                        <!-- Essay textarea -->
+                        <textarea id="eh-essay-input" class="w-full bg-[#0e0e13] border border-[#4ade80]/30 rounded-lg p-6 text-[#e4e1e9] font-body text-base leading-relaxed resize-none focus:outline-none focus:border-[#4ade80]/60 focus:shadow-[0_0_20px_rgba(74,222,128,0.06)] transition-all min-h-[200px]" placeholder="Paste your essay here..."></textarea>
+
+                        <!-- Assignment prompt -->
+                        <input id="eh-assignment" type="text" class="w-full bg-[#0e0e13] border border-[#4d4635]/30 rounded-lg px-6 py-3 text-[#e4e1e9] font-body text-sm focus:outline-none focus:border-[#4ade80]/40 transition-all" placeholder="Assignment prompt or topic (e.g. 'Analyze the causes of WWI')" />
+
+                        <div class="flex flex-wrap gap-4">
+                            <!-- Essay type dropdown -->
+                            <div class="flex-1 min-w-[180px]">
+                                <label class="block font-sans text-[10px] uppercase tracking-widest text-[#d0c5af]/50 mb-1.5">Essay Type</label>
+                                <select id="eh-type" class="w-full bg-[#0e0e13] border border-[#4d4635]/30 rounded-lg px-4 py-2.5 text-[#e4e1e9] font-sans text-sm focus:outline-none focus:border-[#4ade80]/40 transition-all">
+                                    <option value="Argumentative">Argumentative</option>
+                                    <option value="Analytical">Analytical</option>
+                                    <option value="Expository">Expository</option>
+                                    <option value="Persuasive">Persuasive</option>
+                                    <option value="Narrative">Narrative</option>
+                                    <option value="Research">Research</option>
+                                    <option value="Compare and Contrast">Compare and Contrast</option>
+                                </select>
+                            </div>
+                            <!-- Grade level dropdown -->
+                            <div class="flex-1 min-w-[180px]">
+                                <label class="block font-sans text-[10px] uppercase tracking-widest text-[#d0c5af]/50 mb-1.5">Grade Level</label>
+                                <select id="eh-grade" class="w-full bg-[#0e0e13] border border-[#4d4635]/30 rounded-lg px-4 py-2.5 text-[#e4e1e9] font-sans text-sm focus:outline-none focus:border-[#4ade80]/40 transition-all">
+                                    <option value="Middle School">Middle School</option>
+                                    <option value="High School" selected>High School</option>
+                                    <option value="Undergraduate">Undergraduate</option>
+                                </select>
+                            </div>
+                            <!-- Word count target -->
+                            <div class="w-[140px]">
+                                <label class="block font-sans text-[10px] uppercase tracking-widest text-[#d0c5af]/50 mb-1.5">Word Count Target</label>
+                                <input id="eh-wordcount" type="number" value="500" min="100" max="5000" class="w-full bg-[#0e0e13] border border-[#4d4635]/30 rounded-lg px-4 py-2.5 text-[#e4e1e9] font-sans text-sm focus:outline-none focus:border-[#4ade80]/40 transition-all" />
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end items-center mt-2">
+                            <button id="eh-analyze-btn" class="bg-[#131318] text-[#4ade80] border border-[#4ade80]/40 px-8 py-3 rounded font-sans font-bold text-sm uppercase tracking-wider flex items-center gap-2 hover:border-[#4ade80] hover:bg-[#4ade80]/10 transition-all shadow-lg shadow-[#4ade80]/10 disabled:opacity-40 disabled:cursor-not-allowed">
+                                <span>Analyze</span>
+                                <span class="material-symbols-outlined text-sm">rate_review</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Essay Helper Chat History (hidden initially) -->
+                <div id="eh-chat-history" class="hidden max-w-[900px] mx-auto w-full px-6 flex flex-col gap-12">
+                </div>
+            </div>
+            <!-- Pipeline Status Bar - persists across all agent states -->
+            <div id="pipeline-status-bar" class="hidden max-w-[900px] mx-auto mt-6 px-6">
+                <div class="flex items-center gap-3 px-4 py-2 bg-[#1b1b20] border border-[#4d4635]/20 rounded font-mono text-[11px] text-[#f2ca50]/80 uppercase tracking-wider">
+                    <span class="animate-pulse w-1.5 h-1.5 rounded-full bg-[#f2ca50] flex-shrink-0"></span>
+                    <span id="pipeline-status-text">Idle</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Input Area (hidden initially) -->
+        <div id="input-container" class="hidden absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#131318] via-[#131318] to-transparent pt-12 pb-6 px-8 z-20">
+            <div class="max-w-[900px] mx-auto bg-[#0e0e13] rounded-xl border border-[#4d4635]/20 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] focus-within:shadow-[0_-10px_40px_rgba(212,175,55,0.1)] focus-within:border-[#f2ca50]/30 transition-all duration-300">
+                <div class="flex items-end gap-4">
+                    <div class="flex flex-col gap-2">
+                        <button class="w-10 h-10 rounded text-[#d0c5af]/60 hover:text-[#f2ca50] hover:bg-[#2a292f] transition-colors flex items-center justify-center" title="Attach Draft">
+                            <span class="material-symbols-outlined text-xl">attach_file</span>
+                        </button>
+                    </div>
+                    <div class="flex-1">
+                        <textarea id="chat-input" class="w-full bg-transparent border-none text-[#e4e1e9] font-body resize-none focus:ring-0 focus:outline-none placeholder:text-[#d0c5af]/40 p-2 min-h-[50px] max-h-[200px]" placeholder="Address The Council or ask for further guidance..."></textarea>
+                    </div>
+                    <button id="send-btn" class="bg-[#f2ca50] text-[#3c2f00] px-6 py-3 rounded font-sans font-bold text-sm uppercase tracking-wide flex items-center gap-2 hover:bg-[#e9c349] transition-colors shadow-lg shadow-[#f2ca50]/20 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <span>Submit</span>
+                        <span class="material-symbols-outlined text-sm">send</span>
+                    </button>
+                </div>
+            </div>
+
+            <p class="text-center text-xs text-[#d0c5af]/40 mt-3 font-sans tracking-wide uppercase">The Council is waiting.</p>
+        </div>
+    </main>
+
+    <!-- Agent 1 Distillation Modal -->
+    <div id="agent1-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+        <div class="bg-[#1b1b20] border border-[#4d4635]/30 rounded-lg w-[65%] max-h-[85vh] flex flex-col shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-[#4d4635]/20">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-[#f2ca50]">filter_alt</span>
+                    <h2 class="text-base font-serif font-bold text-[#d4af37]">Agent 1: Comparative Distillation Report</h2>
+                </div>
+                <button id="close-agent1-modal" class="text-[#d0c5af]/60 hover:text-white transition-colors text-2xl font-bold">&times;</button>
+            </div>
+            <div id="agent1-report-content" class="p-6 overflow-y-auto text-sm leading-relaxed text-[#d0c5af] msg-content whitespace-pre-wrap"></div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

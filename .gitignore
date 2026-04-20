@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+essay_db/
+*.csv
+github_deploy_key
+github_deploy_key.pub
+.env
