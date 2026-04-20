@@ -84,6 +84,7 @@ flowchart TD
 ## 🛠 Setup & Installation
 
 ### Requirements
+* **Bring Your Own Datasets:** The raw CSV datasets of student writing used to generate the vector database are **not** included in this repository. In order for the deep RAG pipelines (like the Distiller and the Humanizer) to function, you **must find and download your own datasets** of actual human-written essays found online (see data sources below) and rebuild the ChromaDB index locally.
 * Python 3.8+
 * [LM Studio](https://lmstudio.ai/) running locally on port `1234`
 * Optional: Provide large token context limit (e.g. 30,000 tokens) in LM Studio for maximum Humanizer performance.
