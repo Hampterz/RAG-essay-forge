@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{% block title %}ScholarLink{% endblock %}</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#603e3e",
+                      "inverse-primary": "#b0cdbb",
+                      "background": "#fcf9f8",
+                      "secondary-container": "#fe8485",
+                      "surface": "#fcf9f8",
+                      "primary": "#173124",
+                      "primary-fixed": "#ccead6",
+                      "tertiary-fixed-dim": "#eabbba",
+                      "on-primary-fixed": "#062014",
+                      "inverse-on-surface": "#f3f0f0",
+                      "surface-container": "#f0eded",
+                      "on-tertiary-fixed": "#2e1414",
+                      "surface-container-lowest": "#ffffff",
+                      "outline": "#727973",
+                      "on-tertiary-container": "#d0a3a3",
+                      "on-primary-fixed-variant": "#324c3e",
+                      "secondary-fixed": "#ffdad9",
+                      "primary-container": "#2d4739",
+                      "on-error-container": "#93000a",
+                      "tertiary-container": "#5a3939",
+                      "tertiary-fixed": "#ffdad9",
+                      "surface-bright": "#fcf9f8",
+                      "error": "#ba1a1a",
+                      "surface-container-high": "#eae7e7",
+                      "surface-tint": "#496455",
+                      "primary-fixed-dim": "#b0cdbb",
+                      "secondary": "#a13d41",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#424844",
+                      "secondary-fixed-dim": "#ffb3b2",
+                      "surface-variant": "#e4e2e1",
+                      "on-secondary-container": "#751c23",
+                      "on-background": "#1b1c1c",
+                      "surface-dim": "#dcd9d9",
+                      "inverse-surface": "#303030",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-secondary-fixed-variant": "#82252b",
+                      "on-primary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "outline-variant": "#c2c8c2",
+                      "on-primary-container": "#98b5a3",
+                      "surface-container-low": "#f6f3f2",
+                      "on-surface": "#1b1c1c",
+                      "surface-container-highest": "#e4e2e1",
+                      "on-secondary-fixed": "#410008",
+                      "tertiary": "#412424"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-max": "960px",
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "margin-desktop": "40px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["\"Source Serif 4\""],
+                      "headline-lg": ["\"Source Serif 4\""],
+                      "body-sm": ["Public Sans"],
+                      "body-lg": ["Public Sans"],
+                      "headline-lg-mobile": ["\"Source Serif 4\""],
+                      "headline-md": ["\"Source Serif 4\""],
+                      "label-md": ["Public Sans"],
+                      "body-md": ["Public Sans"]
+              },
+              "fontSize": {
+                      "headline-sm": ["22px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                      "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+        }
+        body {
+            background-color: #fcf9f8;
+            color: #1b1c1c;
+        }
+        .ambient-shadow {
+            box-shadow: 0 8px 24px -4px rgba(23, 49, 36, 0.05);
+        }
+</style>
+{% block extra_head %}{% endblock %}
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed">
+
+<!-- Top Navigation -->
+<nav class="docked full-width top-0 bg-background border-b border-outline-variant z-50 sticky">
+    <div class="flex justify-between items-center w-full px-gutter py-4 max-w-container-max mx-auto">
+        <a href="{{ url_for('index') }}" class="font-headline-md text-headline-md font-semibold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">book_4</span>
+            ScholarLink
+        </a>
+        <div class="hidden md:flex gap-6 items-center">
+            {% set current_endpoint = request.endpoint %}
+            <a href="{{ url_for('index') }}" class="{% if current_endpoint == 'index' %}text-primary font-bold border-b-2 border-primary opacity-80{% else %}text-on-surface-variant hover:text-primary transition-colors duration-200{% endif %} pb-1 font-label-md text-label-md">Dashboard</a>
+            <a href="{{ url_for('profile') }}" class="{% if current_endpoint == 'profile' %}text-primary font-bold border-b-2 border-primary opacity-80{% else %}text-on-surface-variant hover:text-primary transition-colors duration-200{% endif %} pb-1 font-label-md text-label-md">Profile</a>
+            <a href="{{ url_for('search') }}" class="{% if current_endpoint == 'search' %}text-primary font-bold border-b-2 border-primary opacity-80{% else %}text-on-surface-variant hover:text-primary transition-colors duration-200{% endif %} pb-1 font-label-md text-label-md">Search</a>
+            <a href="{{ url_for('queue') }}" class="{% if current_endpoint == 'queue' or current_endpoint == 'edit_draft' %}text-primary font-bold border-b-2 border-primary opacity-80{% else %}text-on-surface-variant hover:text-primary transition-colors duration-200{% endif %} pb-1 font-label-md text-label-md">Draft Queue</a>
+            <a href="{{ url_for('contacted') }}" class="{% if current_endpoint == 'contacted' %}text-primary font-bold border-b-2 border-primary opacity-80{% else %}text-on-surface-variant hover:text-primary transition-colors duration-200{% endif %} pb-1 font-label-md text-label-md">Contacted</a>
+        </div>
+        <div class="flex items-center gap-4 text-on-surface-variant">
+            <a href="{{ url_for('profile') }}" aria-label="Settings" class="hover:text-primary transition-colors duration-200">
+                <span class="material-symbols-outlined">settings</span>
+            </a>
+            <a href="{{ url_for('profile') }}" aria-label="Account" class="hover:text-primary transition-colors duration-200">
+                <span class="material-symbols-outlined">account_circle</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="bg-primary-fixed text-on-primary-fixed px-gutter py-3 text-center border-b border-primary-fixed-dim">
+      {% for m in messages %}
+        <p class="font-body-md">{{ m }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+<!-- Footer -->
+<footer class="full-width mt-auto bg-background border-t border-outline-variant mt-12">
+    <div class="max-w-container-max mx-auto px-gutter py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="font-label-md text-label-md font-bold text-primary flex items-center gap-2">
+            ScholarLink
+        </div>
+        <div class="font-body-sm text-body-sm text-on-surface-variant text-center md:text-left">
+            © 2024 ScholarLink • Your research log is saved locally.
+        </div>
+        <div class="flex gap-6">
+            <a class="text-on-surface-variant font-body-sm text-body-sm hover:text-primary underline transition-all focus:outline-none focus:ring-2 focus:ring-primary rounded" href="#">Privacy</a>
+            <a class="text-on-surface-variant font-body-sm text-body-sm hover:text-primary underline transition-all focus:outline-none focus:ring-2 focus:ring-primary rounded" href="#">Guide</a>
+            <a class="text-on-surface-variant font-body-sm text-body-sm hover:text-primary underline transition-all focus:outline-none focus:ring-2 focus:ring-primary rounded" href="#">Support</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

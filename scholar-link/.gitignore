@@ -1,0 +1,6 @@
+reachly.db
+credentials/client_secret.json
+credentials/token.json
+__pycache__/
+*.pyc
+venv/

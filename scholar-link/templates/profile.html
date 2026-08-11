@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Profile — ScholarLink{% endblock %}
+{% block content %}
+<main class="flex-grow w-full max-w-container-max mx-auto px-gutter md:px-margin-desktop py-12 md:py-16">
+    <header class="mb-12">
+        <h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Your Profile</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+            Tell us about yourself. This context helps Gemini draft highly personalized emails on your behalf.
+        </p>
+    </header>
+
+    <form method="post" class="space-y-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 md:p-8 ambient-shadow">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-2">Name</label>
+                    <input type="text" name="name" value="{{ profile.name }}" required class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md focus:ring-1 focus:ring-primary focus:border-primary">
+                </div>
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-2">Background <span class="text-outline font-normal">(who you are, what you study)</span></label>
+                    <textarea name="background" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md focus:ring-1 focus:ring-primary focus:border-primary resize-y">{{ profile.background }}</textarea>
+                </div>
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-2">Interests <span class="text-outline font-normal">(what draws you to research)</span></label>
+                    <textarea name="interests" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md focus:ring-1 focus:ring-primary focus:border-primary resize-y">{{ profile.interests }}</textarea>
+                </div>
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-2">Resume Text <span class="text-outline font-normal">(optional paste)</span></label>
+                    <textarea name="resume_text" rows="6" class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md focus:ring-1 focus:ring-primary focus:border-primary resize-y">{{ profile.resume_text }}</textarea>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-2">Email Template <span class="text-outline font-normal">(Gemini adapts this)</span></label>
+                    <textarea name="email_template" rows="12" class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md focus:ring-1 focus:ring-primary focus:border-primary resize-y">{{ profile.email_template }}</textarea>
+                </div>
+                
+                <div class="bg-primary-fixed border border-primary border-opacity-20 rounded-lg p-6 space-y-4">
+                    <h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2">
+                        <span class="material-symbols-outlined">api</span> Gemini API Configuration
+                    </h3>
+                    <div>
+                        <label class="block font-label-md text-label-md text-primary mb-2">Gemini API Key</label>
+                        <input type="password" id="gemini_api_key" name="gemini_api_key" value="{{ profile.gemini_api_key }}" class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md focus:ring-1 focus:ring-primary focus:border-primary" placeholder="AIza...">
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-label-md text-primary mb-2">Select Model</label>
+                        <div class="flex gap-2">
+                            <select id="gemini_model" name="gemini_model" class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md focus:ring-1 focus:ring-primary focus:border-primary">
+                                {% if profile.gemini_model %}
+                                    <option value="{{ profile.gemini_model }}" selected>{{ profile.gemini_model }}</option>
+                                {% else %}
+                                    <option value="" disabled selected>Select a model...</option>
+                                {% endif %}
+                            </select>
+                            <button type="button" id="load_models_btn" class="px-4 py-2 border border-primary text-primary font-label-md rounded hover:bg-primary-fixed-dim transition-colors">
+                                Load
+                            </button>
+                        </div>
+                        <p id="model_status" class="text-body-sm mt-1 text-on-surface-variant"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end pt-6 border-t border-outline-variant">
+            <button type="submit" class="bg-primary text-on-primary font-label-md px-8 py-3 rounded hover:bg-primary-container transition-colors">
+                Save Profile
+            </button>
+        </div>
+    </form>
+</main>
+
+<script>
+    document.getElementById('load_models_btn').addEventListener('click', async () => {
+        const apiKey = document.getElementById('gemini_api_key').value;
+        const statusEl = document.getElementById('model_status');
+        const selectEl = document.getElementById('gemini_model');
+        
+        if (!apiKey) {
+            statusEl.textContent = 'Please enter an API key first.';
+            statusEl.className = 'text-body-sm mt-1 text-error';
+            return;
+        }
+
+        statusEl.textContent = 'Loading models...';
+        statusEl.className = 'text-body-sm mt-1 text-on-surface-variant';
+        
+        try {
+            const res = await fetch('{{ url_for("api_models") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ api_key: apiKey })
+            });
+            const data = await res.json();
+            
+            if (res.ok) {
+                selectEl.innerHTML = '';
+                data.models.forEach(model => {
+                    const opt = document.createElement('option');
+                    opt.value = model;
+                    opt.textContent = model;
+                    if (model === '{{ profile.gemini_model }}') {
+                        opt.selected = true;
+                    }
+                    selectEl.appendChild(opt);
+                });
+                statusEl.textContent = `Loaded ${data.models.length} models.`;
+                statusEl.className = 'text-body-sm mt-1 text-primary';
+            } else {
+                statusEl.textContent = `Error: ${data.error}`;
+                statusEl.className = 'text-body-sm mt-1 text-error';
+            }
+        } catch (e) {
+            statusEl.textContent = `Failed to fetch: ${e.message}`;
+            statusEl.className = 'text-body-sm mt-1 text-error';
+        }
+    });
+</script>
+{% endblock %}

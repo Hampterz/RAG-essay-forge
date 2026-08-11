@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — ScholarLink{% endblock %}
+{% block content %}
+<main class="flex-grow w-full max-w-container-max mx-auto px-gutter md:px-margin-desktop py-12 md:py-16">
+    <header class="mb-12 text-center md:text-left">
+        <h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Dashboard</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+            Your Gmail. Your messages. Your final decision. Nothing is ever auto-sent.
+        </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Drafts Card -->
+        <a href="{{ url_for('queue') }}" class="block bg-surface-container-lowest border border-outline-variant rounded-xl p-8 hover:bg-surface-container-low transition-colors ambient-shadow group">
+            <div class="flex flex-col h-full justify-between">
+                <div>
+                    <h2 class="font-headline-lg text-[48px] text-primary group-hover:text-primary-container transition-colors mb-2">{{ drafts|length }}</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant uppercase tracking-wider font-semibold">Drafts Waiting</p>
+                </div>
+                <div class="mt-8 flex items-center text-primary font-label-md gap-1">
+                    Go to queue <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Contacted Card -->
+        <a href="{{ url_for('contacted') }}" class="block bg-surface-container-lowest border border-outline-variant rounded-xl p-8 hover:bg-surface-container-low transition-colors ambient-shadow group">
+            <div class="flex flex-col h-full justify-between">
+                <div>
+                    <h2 class="font-headline-lg text-[48px] text-primary group-hover:text-primary-container transition-colors mb-2">{{ contacted_count }}</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant uppercase tracking-wider font-semibold">Professors Contacted</p>
+                </div>
+                <div class="mt-8 flex items-center text-primary font-label-md gap-1">
+                    View list <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Search Card -->
+        <a href="{{ url_for('search') }}" class="block bg-primary-fixed border border-primary border-opacity-20 rounded-xl p-8 hover:bg-primary-fixed-dim transition-colors ambient-shadow group">
+            <div class="flex flex-col h-full justify-between">
+                <div>
+                    <span class="material-symbols-outlined text-[48px] text-primary mb-2" style="font-variation-settings: 'FILL' 1;">person_search</span>
+                    <p class="font-body-md text-body-md text-on-surface-variant uppercase tracking-wider font-semibold">Find Fit</p>
+                </div>
+                <div class="mt-8 flex items-center text-primary font-label-md gap-1">
+                    Search now <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </div>
+            </div>
+        </a>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Draft Review — ScholarLink{% endblock %}
+{% block content %}
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-margin-desktop">
+    <div class="mb-8">
+        <a class="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors duration-200 mb-4 font-body-sm text-body-sm" href="{{ url_for('queue') }}">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Back to Draft Queue
+        </a>
+        <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Review Draft</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-2">Refine your message before pushing it to your email client.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+        <div class="lg:col-span-8 space-y-6">
+            <form method="post" class="bg-surface-container-lowest border border-outline-variant rounded-lg p-6 md:p-8 ambient-shadow space-y-6">
+                <!-- Professor Name -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-2">Recipient</label>
+                    <div class="flex items-center gap-3 px-4 py-3 bg-surface-container-low border border-outline-variant rounded bg-opacity-50">
+                        <div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-headline-sm text-headline-sm shrink-0">
+                            {{ draft.professor_name[0] }}
+                        </div>
+                        <span class="font-body-md text-body-md font-semibold text-primary">{{ draft.professor_name }}</span>
+                    </div>
+                </div>
+
+                <!-- Email Address Field -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-2" for="professor_email">Recipient Email</label>
+                    <input type="email" id="professor_email" name="professor_email" value="{{ draft.professor_email }}" class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md text-on-background focus:ring-1 focus:ring-primary focus:border-primary transition-shadow" placeholder="e.g. professor@university.edu" />
+                    {% if not draft.professor_email %}
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-2 flex items-center gap-1" id="email-hint">
+                        <span class="material-symbols-outlined text-[16px] text-secondary">info</span>
+                        No email on file - please enter manually if known.
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Subject Line -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-2" for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" value="{{ draft.subject }}" class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md text-on-background focus:ring-1 focus:ring-primary focus:border-primary transition-shadow" />
+                </div>
+
+                <!-- Email Body -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-2 flex justify-between items-end" for="body">
+                        <span>Message</span>
+                    </label>
+                    <textarea id="body" name="body" rows="12" class="w-full bg-surface-container-lowest border border-outline-variant rounded px-4 py-3 font-body-md text-body-md text-on-background focus:ring-1 focus:ring-primary focus:border-primary transition-shadow resize-y leading-relaxed">{{ draft.body }}</textarea>
+                </div>
+
+                <div class="flex items-center gap-4 border-b border-outline-variant pb-4">
+                    <button type="submit" class="bg-surface-variant text-on-surface font-label-md text-label-md font-semibold px-4 py-2 rounded hover:bg-outline-variant transition-colors duration-200 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-sm">save</span>
+                        Save Edits
+                    </button>
+                    <button type="submit" formaction="{{ url_for('regenerate_draft', draft_id=draft.id) }}" formmethod="post" class="bg-surface-container-low border border-outline-variant text-on-surface font-label-md text-label-md font-semibold px-4 py-2 rounded hover:bg-surface-variant transition-colors duration-200 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-sm">cycle</span>
+                        Regenerate
+                    </button>
+                </div>
+
+                <!-- Actions -->
+                <div class="pt-2 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="font-body-sm text-body-sm text-on-surface-variant order-2 md:order-1 text-center md:text-left">
+                        Your message will be sent to your Gmail Drafts folder.<br class="hidden md:block"/> You'll have one final look before hitting send.
+                    </p>
+                    <a href="{{ url_for('send_to_gmail', draft_id=draft.id) }}" class="order-1 md:order-2 w-full md:w-auto bg-primary text-on-primary font-body-md text-body-md font-semibold px-6 py-3 rounded hover:bg-primary-container transition-colors duration-200 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">send_to_mobile</span>
+                        Push to Gmail Drafts
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <aside class="lg:col-span-4 space-y-6">
+            <div class="bg-primary-fixed border border-outline-variant rounded-lg p-6 ambient-shadow bg-opacity-30">
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">info</span>
+                    Status Details
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase">Created At</h4>
+                        <p class="font-body-sm text-body-sm text-on-background">{{ draft.created_at }}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase">State</h4>
+                        <span class="bg-primary text-on-primary px-3 py-1 rounded-full font-label-md bg-opacity-10 text-primary-container border border-primary border-opacity-20 uppercase tracking-widest">{{ draft.status }}</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</main>
+{% endblock %}

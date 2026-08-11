@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Find Professors — ScholarLink{% endblock %}
+{% block content %}
+<main class="flex-grow w-full max-w-container-max mx-auto px-gutter md:px-margin-desktop py-12 md:py-16">
+    <header class="mb-12">
+        <h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background mb-4">Find Research Fit</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+            Semantic Scholar doesn't have a dedicated "school + department" filter, so the best results come from combining a topic and a school in one query, e.g. <em>"soft robotics UC San Diego"</em>.
+        </p>
+    </header>
+
+    <!-- Search and Filter Bar -->
+    <section class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <form method="post" class="relative w-full">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+            <input type="text" name="query" value="{{ query }}" required class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-12 pr-32 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-shadow" placeholder="e.g. controls robotics UCSD">
+            <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-on-primary px-4 py-1.5 rounded font-label-md hover:bg-primary-container transition-colors">
+                Search
+            </button>
+        </form>
+    </section>
+
+    <!-- Data List -->
+    {% if results %}
+        <section class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant bg-surface-container-low font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+                <div class="col-span-5">Professor / Affiliation</div>
+                <div class="col-span-3">Papers</div>
+                <div class="col-span-4 text-right">Action</div>
+            </div>
+
+            <div class="divide-y divide-outline-variant">
+                {% for r in results %}
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-5 items-center hover:bg-surface-container-low transition-colors group">
+                    <div class="col-span-1 md:col-span-5 flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-headline-sm text-headline-sm shrink-0">
+                            {{ r.name[0] }}
+                        </div>
+                        <div>
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">{{ r.name }}</h3>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">
+                                {{ r.affiliations|join(', ') if r.affiliations else 'Affiliation not listed' }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-span-1 md:col-span-3">
+                        <span class="font-body-sm text-body-sm text-on-surface-variant hidden md:inline">Papers: </span>
+                        <span class="font-body-sm text-body-sm text-on-surface">{{ r.paperCount }} listed</span>
+                    </div>
+                    <div class="col-span-1 md:col-span-4 flex justify-end items-center">
+                        <a href="{{ url_for('prepare_draft', author_id=r.authorId) }}" class="flex items-center gap-2 bg-surface-variant text-on-surface hover:bg-outline-variant px-4 py-2 rounded font-label-md transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">edit_document</span>
+                            Prepare Draft
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% elif query %}
+        <div class="text-center py-12">
+            <p class="font-body-lg text-body-lg text-on-surface-variant">No results found for "{{ query }}". Try a broader query.</p>
+        </div>
+    {% endif %}
+</main>
+{% endblock %}
