@@ -81,6 +81,17 @@ flowchart TD
 
 ---
 
+## ✉️ ScholarLink: Academic Outreach
+
+Included in this repository is **ScholarLink**, a completely standalone tool designed to help students find professors with matching research interests and draft personalized outreach emails.
+
+Located in the `scholar-link/` directory, it features:
+- **Professor Search:** Queries the Semantic Scholar Graph API to find researchers based on your topics of interest.
+- **AI-Powered Drafts:** Uses the Gemini API to automatically generate highly tailored email drafts based on the professor's recent publications and your personal academic profile.
+- **Local Review & Gmail Integration:** Review, edit, and perfect the draft locally before pushing it directly to your Gmail Drafts folder. (ScholarLink will never send an email automatically).
+
+---
+
 ## 🛠 Setup & Installation
 
 ### Requirements
